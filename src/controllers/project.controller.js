@@ -165,6 +165,21 @@ const deleteProjectMember = asyncHandler(async(req,res)=>{
         );
 });
 
+const getAllProjects = asyncHandler(async(req,res)=>{
+    const user = await User.findById(req.user._id);
+    if(!user){
+        throw new ApiError(404,"User not found");
+    }
+    const projects = await Project.find({owner:req.user._id});
+    if(!projects){
+        throw new ApiError(400,"No projects found for this user");
+    }
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200,"All projects",projects)
+        );
+});
 
 export{
     createProject,
@@ -173,5 +188,6 @@ export{
     deleteProject,
     getProjectDetails,
     addProjectMembers,
-    deleteProjectMember
+    deleteProjectMember,
+    getAllProjects
 }

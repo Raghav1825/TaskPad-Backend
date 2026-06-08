@@ -3,7 +3,7 @@ import mongoose , {Schema} from "mongoose";
 const userSettingSchema = new Schema(
     {
         user:{
-            user:Schema.Types.ObjectId,
+            type:Schema.Types.ObjectId,
             ref:"User"
         },
         theme:{
@@ -14,3 +14,5 @@ const userSettingSchema = new Schema(
     },
     {timestamps:true}
 )
+
+export const UserSettings = mongoose.model("UserSettings",userSettingSchema);

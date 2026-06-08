@@ -5,7 +5,7 @@ import {
     logOutUser, 
     refreshAccessToken , 
     getCurrentUser,
-    changeAccountDtails,
+    changeAccountDetails,
     changeProfileImage,
     changeCurrentPassword,
     deleteAccount
@@ -29,7 +29,7 @@ router.route("/login").post(loginUser)
 router.route("/logout").post(verifyJWT,logOutUser)
 router.route("/refresh-token").post(verifyJWT,refreshAccessToken)
 router.route("/current-user").get(verifyJWT,getCurrentUser)
-router.route("/update-account-details").patch(verifyJWT,changeAccountDtails)
+router.route("/update-account-details").patch(verifyJWT,changeAccountDetails)
 router.route("/update-profile-image").patch(verifyJWT,upload.fields([
     {
         name:"profileImage",

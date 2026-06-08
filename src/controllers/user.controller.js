@@ -159,7 +159,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 });
 
-const changeAccountDtails = asyncHandler(async (req, res) => {
+const changeAccountDetails = asyncHandler(async (req, res) => {
     const { fullName, email, phoneNumber } = req.body;
     if (!fullName) {
         throw new ApiError(400, "Full name is required")

@@ -7,7 +7,8 @@ import {
     deleteProject,
     getProjectDetails,
     addProjectMembers,
-    deleteProjectMember
+    deleteProjectMember,
+    getAllProjects
 } from "../controllers/project.controller.js";
 
 const router = Router();
@@ -21,5 +22,6 @@ router.route("/delete-project/:projectId").delete(deleteProject);
 router.route("/get-project-details/:projectId").get(getProjectDetails);
 router.route("/add-project-members/:projectId").post(addProjectMembers);
 router.route("/delete-project-member/:projectId").delete(deleteProjectMember);
+router.route("/all-projects").get(getAllProjects);
 
 export default router;

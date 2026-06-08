@@ -43,7 +43,7 @@ const updateTaskStatus=asyncHandler(async(req,res)=>{
             $set:
             {
                 taskStatus,
-                editedBy:req.user.fullName
+                editedBy:req.user._id
             }
         },
         {new:true}
@@ -86,7 +86,7 @@ const editProjectTask = asyncHandler(async(req,res)=>{
 
     projectTask.taskName = taskName;
     projectTask.taskDescription = taskDescription;
-    projectTask.editedBy = req.user.fullName;
+    projectTask.editedBy = req.user._id;
 
     await projectTask.save();
     
