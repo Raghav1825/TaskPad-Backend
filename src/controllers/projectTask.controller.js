@@ -19,12 +19,12 @@ const createProjectTask = asyncHandler(async(req,res)=>{
         taskName,
         taskDescription,
         taskStatus:"not started",
-        addedBy:req.user.fullName
+        addedBy:req.user?._id
     })
 
     return res
     .status(201)
-    .json(new ApiResponse(201,projectTask,"Task created successfully"))
+    .json(new ApiResponse(201,"Task created successfully",projectTask))
 });
 
 const updateTaskStatus=asyncHandler(async(req,res)=>{
@@ -51,7 +51,7 @@ const updateTaskStatus=asyncHandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(new ApiResponse(200,projectTask,"Task status updated successfully"))
+    .json(new ApiResponse(200,"Task status updated successfully",projectTask))
 });
 
 
@@ -65,7 +65,7 @@ const getProjectTasks = asyncHandler(async(req,res)=>{
     const projectTasks = await ProjectTask.find({project:projectId});
     return res
     .status(200)
-    .json(new ApiResponse(200,projectTasks,"Project tasks fetched successfully"))
+    .json(new ApiResponse(200,"Project tasks fetched successfully",projectTasks))
 });
 
 const editProjectTask = asyncHandler(async(req,res)=>{
@@ -92,7 +92,7 @@ const editProjectTask = asyncHandler(async(req,res)=>{
     
     return res
     .status(200)
-    .json(new ApiResponse(200,projectTask,"Task edited successfully"))
+    .json(new ApiResponse(200,"Task edited successfully",projectTask))
 });
 
 const deleteProjectTask = asyncHandler(async(req,res)=>{
@@ -106,7 +106,7 @@ const deleteProjectTask = asyncHandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(new ApiResponse(200,projectTask,"Task deleted successfully"))
+    .json(new ApiResponse(200,"Task deleted successfully",{}))
 });
 
 export {

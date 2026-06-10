@@ -4,24 +4,23 @@ import {DailyTask} from "../models/dailyTask.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const addDailyTask=asyncHandler(async (req,res)=>{
-    const {name , description , date} = req.body;
+    const {name , description} = req.body;
     const user = req.user?._id;
 
-    if(!name || !description){
-        throw new ApiError(400,"All fields are required");
+    if(!name){
+        throw new ApiError(400,"Task name is required");
     }
 
     const dailyTask = await DailyTask.create({
         user,
         name,
         description,
-        date,
         completed:false
     });
 
     return res
     .status(200)
-    .json(new ApiResponse(200,dailyTask,"Daily task added successfully"));
+    .json(new ApiResponse(200,"Daily task added successfully",dailyTask));
 });
 
 const editTaskDate=asyncHandler(async(req,res)=>{
@@ -36,7 +35,7 @@ const editTaskDate=asyncHandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(new ApiResponse(200,dailyTask,"Task date edited successfully"));
+    .json(new ApiResponse(200,"Task date edited successfully",dailyTask,));
 });
 
 const editTaskDetails=asyncHandler(async(req,res)=>{
@@ -51,17 +50,20 @@ const editTaskDetails=asyncHandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(new ApiResponse(200,dailyTask,"Task details edited successfully"));
+    .json(new ApiResponse(200,"Task details edited successfully",dailyTask));
 });
 
 const deleteTask=asyncHandler(async(req,res)=>{
     const taskId=req.params.taskId;
 
     const dailyTask = await DailyTask.findByIdAndDelete(taskId);
+    if(!dailyTask){
+        throw new ApiError(400,"Task not found");
+    }
 
     return res
     .status(200)
-    .json(new ApiResponse(200,dailyTask,"Task deleted successfully"));
+    .json(new ApiResponse(200,"Task deleted successfully",{}));
 });
 
 const todaysTask=asyncHandler(async(req,res)=>{
@@ -81,7 +83,7 @@ const todaysTask=asyncHandler(async(req,res)=>{
     });
     return res
     .status(200)
-    .json(new ApiResponse(200, tasks, "Today's tasks fetched successfully"));
+    .json(new ApiResponse(200, "Today's tasks fetched successfully", tasks));
 });
 
 const getAllTask = asyncHandler(async(req,res)=>{
@@ -93,7 +95,7 @@ const getAllTask = asyncHandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(new ApiResponse(200,tasks,"All tasks fetched successfully"));
+    .json(new ApiResponse(200,"All tasks fetched successfully",tasks));
 });
 
 export {
