@@ -30,12 +30,7 @@ router.route("/logout").post(verifyJWT,logOutUser)
 router.route("/refresh-token").post(verifyJWT,refreshAccessToken)
 router.route("/current-user").get(verifyJWT,getCurrentUser)
 router.route("/update-account-details").patch(verifyJWT,changeAccountDetails)
-router.route("/update-profile-image").patch(verifyJWT,upload.fields([
-    {
-        name:"profileImage",
-        maxCount:1
-    }
-]),changeProfileImage)
-router.route("/change-password").post(verifyJWT,changeCurrentPassword)
+router.route("/update-profile-image").patch(verifyJWT,upload.single("profileImage"),changeProfileImage)
+router.route("/change-password").patch(verifyJWT,changeCurrentPassword)
 router.route("/delete-account").delete(verifyJWT,deleteAccount)
 export default router;

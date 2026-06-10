@@ -212,7 +212,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 });
 
 const changeProfileImage = asyncHandler(async (req, res) => {
-    const profileImageLocalPath = req.files?.path;
+    const profileImageLocalPath = req.file?.path;
     if (!profileImageLocalPath) {
         throw new ApiError(400, "Profile Image file is missing")
     }
@@ -281,7 +281,7 @@ export {
     logOutUser,
     refreshAccessToken,
     changeCurrentPassword,
-    changeAccountDtails,
+    changeAccountDetails,
     changeProfileImage,
     getCurrentUser,
     deleteAccount

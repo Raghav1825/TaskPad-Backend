@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-router.use(verifyJwt);
+router.use(verifyJWT);
 
 router.route("/get-settings").get(getUserSettings);
 router.route("/update-settings").patch(updateUserSettings);

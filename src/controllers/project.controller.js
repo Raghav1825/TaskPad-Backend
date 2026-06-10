@@ -2,7 +2,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Project } from "../models/project.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {User} from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 
 const createProject = asyncHandler(async (req, res) => {
     const { projectName, projectDescription } = req.body;
@@ -13,7 +13,7 @@ const createProject = asyncHandler(async (req, res) => {
         projectName,
         projectDescription,
         owner: req.user?._id,
-        projectStatus:"Not Started"
+        projectStatus: "Not Started"
     });
     return res
         .status(201)
@@ -23,18 +23,18 @@ const createProject = asyncHandler(async (req, res) => {
 });
 
 
-const editProjectDetails = asyncHandler(async(req,res)=>{
-    const {projectId} = req.params;
-    const {projectName, projectDescription} = req.body;
+const editProjectDetails = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
+    const { projectName, projectDescription } = req.body;
     if (!projectId) {
         throw new ApiError(400, "Project ID is required")
     }
     const project = await Project.findById(projectId);
-    if(!project){
-        throw new ApiError(404,"Project not found")
+    if (!project) {
+        throw new ApiError(404, "Project not found")
     }
-    if(project.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(403,"You are not authorized to edit this project")
+    if (project.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(403, "You are not authorized to edit this project")
     }
     project.projectName = projectName;
     project.projectDescription = projectDescription;
@@ -46,18 +46,18 @@ const editProjectDetails = asyncHandler(async(req,res)=>{
         )
 });
 
-const editProjectStatus = asyncHandler(async(req,res)=>{
-    const {projectId} = req.params;
-    const {projectStatus} = req.body;
+const editProjectStatus = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
+    const { projectStatus } = req.body;
     if (!projectId) {
         throw new ApiError(400, "Project ID is required")
     }
     const project = await Project.findById(projectId);
-    if(!project){
-        throw new ApiError(404,"Project not found")
+    if (!project) {
+        throw new ApiError(404, "Project not found")
     }
-    if(project.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(403,"You are not authorized to edit this project")
+    if (project.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(403, "You are not authorized to edit this project")
     }
     project.projectStatus = projectStatus;
     await project.save();
@@ -68,43 +68,50 @@ const editProjectStatus = asyncHandler(async(req,res)=>{
         )
 });
 
-const deleteProject = asyncHandler(async(req,res)=>{
-    const {projectId} = req.params;
+const deleteProject = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
     if (!projectId) {
         throw new ApiError(400, "Project ID is required")
     }
     const project = await Project.findById(projectId);
-    if(!project){
-        throw new ApiError(404,"Project not found")
+    if (!project) {
+        throw new ApiError(404, "Project not found")
     }
-    if(project.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(403,"You are not authorized to delete this project")
+    if (project.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(403, "You are not authorized to delete this project")
     }
     await project.deleteOne();
     return res
         .status(200)
         .json(
-            new ApiResponse(200, "Project deleted successfully",{})
+            new ApiResponse(200, "Project deleted successfully", {})
         )
 });
 
-const getProjectDetails = asyncHandler(async(req,res)=>{
-    const {projectId} = req.params;
+const getProjectDetails = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
     if (!projectId) {
         throw new ApiError(400, "Project ID is required")
     }
     const project = await Project.findById(projectId);
-    if(!project){
-        throw new ApiError(404,"Project not found")
+    if (!project) {
+        throw new ApiError(404, "Project not found")
+    }
+    const isOwner = project.owner.toString() === req.user?._id.toString();
+    const isMember = project.members.some(
+        (memberId) => memberId.toString() === req.user?._id.toString()
+    );
+    if (!isOwner && !isMember) {
+        throw new ApiError(403, "You are not authorized to view this project");
     }
     return res
         .status(200)
         .json(
-            new ApiResponse(200, "Project details",project)
+            new ApiResponse(200, "Project details", project)
         )
 });
 
-const addProjectMembers = asyncHandler(async(req,res)=>{
+const addProjectMembers = asyncHandler(async (req, res) => {
     const { projectId } = req.params;
     const { email } = req.body;
     if (!email) {
@@ -114,16 +121,16 @@ const addProjectMembers = asyncHandler(async(req,res)=>{
     if (!project) {
         throw new ApiError(404, "Project not found");
     }
-    
+
     if (project.owner.toString() !== req.user?._id.toString()) {
         throw new ApiError(403, "You are not authorized to add members");
     }
-    
+
     const userToAdd = await User.findOne({ email });
     if (!userToAdd) {
         throw new ApiError(404, "User with this email not found");
     }
-    
+
     if (project.members.includes(userToAdd._id)) {
         throw new ApiError(400, "User is already a member of this project");
     }
@@ -136,52 +143,59 @@ const addProjectMembers = asyncHandler(async(req,res)=>{
         );
 });
 
-const deleteProjectMember = asyncHandler(async(req,res)=>{
+const deleteProjectMember = asyncHandler(async (req, res) => {
     const { projectId } = req.params;
-    const {email} = req.body;
-    if(!email){
-        throw new ApiError(400,"Email is required");
+    const { email } = req.body;
+    if (!email) {
+        throw new ApiError(400, "Email is required");
     }
     const project = await Project.findById(projectId);
-    if(!project){
-        throw new ApiError(404,"Project not found");
+    if (!project) {
+        throw new ApiError(404, "Project not found");
     }
-    if(project.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(403,"You are not authorized to delete this member");
+    if (project.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(403, "You are not authorized to delete this member");
     }
-    const userToRemove = await User.findOne({email});
-    if(!userToRemove){
-        throw new ApiError(404,"User not found");
+    const userToRemove = await User.findOne({ email });
+    if (!userToRemove) {
+        throw new ApiError(404, "User not found");
     }
-    if(!project.members.includes(userToRemove._id)){
-        throw new ApiError(400,"User is not a member of this project");
+    if (!project.members.includes(userToRemove._id)) {
+        throw new ApiError(400, "User is not a member of this project");
     }
-    project.members = project.members.filter((member)=>member.toString() !== userToRemove._id.toString());
+    project.members = project.members.filter((member) => member.toString() !== userToRemove._id.toString());
     await project.save();
     return res
         .status(200)
         .json(
-            new ApiResponse(200,"Member deleted successfully",project)
+            new ApiResponse(200, "Member deleted successfully", project)
         );
 });
 
-const getAllProjects = asyncHandler(async(req,res)=>{
+const getAllProjects = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
-    if(!user){
-        throw new ApiError(404,"User not found");
+    if (!user) {
+        throw new ApiError(404, "User not found");
     }
-    const projects = await Project.find({owner:req.user._id});
-    if(!projects){
-        throw new ApiError(400,"No projects found for this user");
+    const projects = await Project.find(
+        {
+            $or: [
+                { owner: req.user._id },
+                { members: req.user._id }
+            ]
+        }
+    );
+    if (!projects) {
+        throw new ApiError(400, "No projects found for this user");
     }
     return res
         .status(200)
         .json(
-            new ApiResponse(200,"All projects",projects)
+            new ApiResponse(200, "All projects", projects)
         );
 });
 
-export{
+export {
     createProject,
     editProjectDetails,
     editProjectStatus,

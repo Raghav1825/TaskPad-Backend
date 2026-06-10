@@ -11,7 +11,7 @@ import {
 
 const router = Router();
 
-router.use(verifyJwt);
+router.use(verifyJWT);
 
 router.route("/add-task").post(addDailyTask);
 router.route("/edit-task/:taskId").patch(editTaskDetails);
