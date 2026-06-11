@@ -8,7 +8,8 @@ import {
     changeAccountDetails,
     changeProfileImage,
     changeCurrentPassword,
-    deleteAccount
+    deleteAccount,
+    getUserById
 } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -33,4 +34,5 @@ router.route("/update-account-details").patch(verifyJWT,changeAccountDetails)
 router.route("/update-profile-image").patch(verifyJWT,upload.single("profileImage"),changeProfileImage)
 router.route("/change-password").patch(verifyJWT,changeCurrentPassword)
 router.route("/delete-account").delete(verifyJWT,deleteAccount)
+router.route("/:id").get(verifyJWT,getUserById)
 export default router;

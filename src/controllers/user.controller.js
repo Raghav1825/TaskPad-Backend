@@ -275,6 +275,18 @@ const deleteAccount = asyncHandler(async (req,res) =>{
         )
 });
 
+const getUserById = asyncHandler(async (req,res)=>{
+    const user = await User.findById(req.params?.id);
+    if(!user){
+        throw new ApiError(404,"User not found")
+    }
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200,"User fetched successfully",user)
+        )
+});
+
 export {
     registerUser,
     loginUser,
@@ -284,5 +296,6 @@ export {
     changeAccountDetails,
     changeProfileImage,
     getCurrentUser,
-    deleteAccount
+    deleteAccount,
+    getUserById
 }
