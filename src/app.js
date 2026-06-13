@@ -31,4 +31,17 @@ app.use("/api/v1/projectTasks",projectTaskRouter);
 app.use("/api/v1/dailyTasks",dailyTaskRouter);
 app.use("/api/v1/userSettings",userSettingsRouter);
 
+// Global error handler
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || "Something went wrong";
+
+    return res.status(statusCode).json({
+        success: false,
+        message,
+        errors: err.errors || [],
+    });
+});
+
+
 export {app}
