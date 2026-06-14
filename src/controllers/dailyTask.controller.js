@@ -98,11 +98,22 @@ const getAllTask = asyncHandler(async(req,res)=>{
     .json(new ApiResponse(200,"All tasks fetched successfully",tasks));
 });
 
+const editTaskStatus = asyncHandler(async(req,res)=>{
+    const taskId = req.params.taskId;
+    const {completed} = req.body;
+
+    const dailyTask = await DailyTask.findByIdAndUpdate(taskId,{$set:{completed}},{new:true});
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,"Task status edited successfully",dailyTask));
+});
 export {
     addDailyTask, 
     editTaskDate, 
     editTaskDetails, 
     deleteTask,
     todaysTask,
-    getAllTask
+    getAllTask,
+    editTaskStatus
 }

@@ -6,7 +6,8 @@ import {
     editTaskDetails, 
     deleteTask,
     todaysTask,
-    getAllTask
+    getAllTask,
+    editTaskStatus
 } from "../controllers/dailyTask.controller.js";
 
 const router = Router();
@@ -19,5 +20,5 @@ router.route("/edit-task-date/:taskId").patch(editTaskDate);
 router.route("/delete-task/:taskId").delete(deleteTask);
 router.route("/today").get(todaysTask);
 router.route("/all-tasks").get(getAllTask);
-
+router.route("/edit-task-status/:taskId").patch(editTaskStatus);
 export default router;
