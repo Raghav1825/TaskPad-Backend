@@ -195,6 +195,45 @@ const getAllProjects = asyncHandler(async (req, res) => {
         );
 });
 
+const getMemberProjects = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    const projects = await Project.find(
+        {
+            members: req.user._id
+        }
+    );
+    if (!projects) {
+        throw new ApiError(400, "No projects found for this user");
+    }
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, "All projects", projects)
+        );
+});
+
+const getOwnerProjects = asyncHandler(async (req, res) => {
+    if (!req.user?._id) {
+        throw new ApiError(401, "Unauthorized");
+    }
+    const projects = await Project.find(
+        {
+            owner: req.user._id
+        }
+    );
+    if (!projects) {
+        throw new ApiError(400, "No projects found for this user");
+    }
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, "All projects", projects)
+        );
+});
+
 export {
     createProject,
     editProjectDetails,
@@ -203,5 +242,7 @@ export {
     getProjectDetails,
     addProjectMembers,
     deleteProjectMember,
-    getAllProjects
+    getAllProjects,
+    getMemberProjects,
+    getOwnerProjects
 }
