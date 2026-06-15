@@ -28,7 +28,7 @@ router.route("/register").post(
 
 router.route("/login").post(loginUser)
 router.route("/logout").post(verifyJWT,logOutUser)
-router.route("/refresh-token").post(verifyJWT,refreshAccessToken)
+router.route("/refresh-token").post(refreshAccessToken)
 router.route("/current-user").get(verifyJWT,getCurrentUser)
 router.route("/update-account-details").patch(verifyJWT,changeAccountDetails)
 router.route("/update-profile-image").patch(verifyJWT,upload.single("profileImage"),changeProfileImage)
