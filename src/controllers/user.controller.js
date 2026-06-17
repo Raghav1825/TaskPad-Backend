@@ -80,16 +80,24 @@ const loginUser = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = await generateAccesTokenAndRefreshToken(user._id);
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
-    const options = {
+    const accessTokenOptions = {
         httpOnly: true,
         secure: true,
-        sameSite: "none"
+        sameSite: "none",
+        maxAge: 1 * 24 * 60 * 60 * 1000  
+    }
+
+    const refreshTokenOptions = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 10 * 24 * 60 * 60 * 1000  
     }
 
     return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, accessTokenOptions)
+        .cookie("refreshToken", refreshToken, refreshTokenOptions)
         .json(
             new ApiResponse(200, "User logged in successfully", loggedInUser)
         )
@@ -142,16 +150,24 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         const { accessToken, refreshToken } = await generateAccesTokenAndRefreshToken(user._id);
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
-        const options = {
+        const accessTokenOptions = {
             httpOnly: true,
             secure: true,
-            sameSite: "none"
+            sameSite: "none",
+            maxAge: 1 * 24 * 60 * 60 * 1000  
+        }
+
+        const refreshTokenOptions = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: 10 * 24 * 60 * 60 * 1000  
         }
 
         return res
             .status(200)
-            .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", refreshToken, options)
+            .cookie("accessToken", accessToken, accessTokenOptions)
+            .cookie("refreshToken", refreshToken, refreshTokenOptions)
             .json(
                 new ApiResponse(200, "Refresh token generated successfully", loggedInUser)
             )
