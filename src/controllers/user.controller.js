@@ -84,14 +84,16 @@ const loginUser = asyncHandler(async (req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge: 1 * 24 * 60 * 60 * 1000  
+        maxAge: 1 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)  
     }
 
     const refreshTokenOptions = {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge: 10 * 24 * 60 * 60 * 1000  
+        maxAge: 10 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)  
     }
 
     return res
@@ -154,14 +156,16 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: "none",
-            maxAge: 1 * 24 * 60 * 60 * 1000  
+            maxAge: 1 * 24 * 60 * 60 * 1000,
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)  
         }
 
         const refreshTokenOptions = {
             httpOnly: true,
             secure: true,
             sameSite: "none",
-            maxAge: 10 * 24 * 60 * 60 * 1000  
+            maxAge: 10 * 24 * 60 * 60 * 1000,
+            expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)  
         }
 
         return res
